@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
-public class DidMappingTest {
+public class DidUtilsTest {
     @Test
     public void validDidFormatShouldBeValid(){
         String ethDid = "did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74";

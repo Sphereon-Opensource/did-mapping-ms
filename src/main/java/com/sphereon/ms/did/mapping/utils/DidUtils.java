@@ -27,7 +27,7 @@ public class DidUtils {
 
     private static Boolean isValidDidMethod(String method) {
         for (DidConstants.DidMethodEnum validMethod : DidConstants.DidMethodEnum.values()) {
-            if (validMethod.method.equals(method)) {
+            if (validMethod.getMethod().equals(method)) {
                 return true;
             }
         }
