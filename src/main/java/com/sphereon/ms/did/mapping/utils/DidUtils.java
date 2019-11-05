@@ -15,7 +15,7 @@ public class DidUtils {
 
         List<String> didParts = Arrays.asList(did.split(":"));
 
-        if (didParts.isEmpty() || didParts.size() < 3) {
+        if (didParts.size() < 3) {
             return false;
         }
 

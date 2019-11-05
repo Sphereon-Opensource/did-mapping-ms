@@ -22,7 +22,7 @@ public class DidMapService {
                 .collect(Collectors.toList());
     }
 
-    Optional<DidMap> findDidMap(String applicaitonId, String userId){
-        return didMapRepository.findByApplicationIdAndUserId(applicaitonId, userId);
+    Optional<DidMap> findDidMap(String applicationId, String userId){
+        return didMapRepository.findByApplicationIdAndUserId(applicationId, userId);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 
 import static java.util.Collections.singletonList;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -39,10 +40,9 @@ public class DidMapController {
     public ResponseEntity getDidMap(@PathVariable(value = RestConstants.Param.APPLICATION_ID) String applicationId,
                                     @PathVariable(value = RestConstants.Param.USER_ID) String userId) {
         Optional<DidMap> didMap = didMapService.findDidMap(applicationId, userId);
-        if(didMap.isPresent()){
+        if (didMap.isPresent()) {
             return ResponseEntity.ok(new DidMappingResponse(singletonList(didMap.get())));
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }
