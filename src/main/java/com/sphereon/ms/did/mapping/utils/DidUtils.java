@@ -1,6 +1,7 @@
 package com.sphereon.ms.did.mapping.utils;
 
 import com.sphereon.ms.did.mapping.config.DidConstants;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public class DidUtils {
 
     public static Boolean isValidDidFormat(String did) {
-        if (did == null) {
+        if (StringUtils.isEmpty(did)) {
             return false;
         }
 
@@ -17,7 +18,7 @@ public class DidUtils {
         if (didParts.isEmpty() || didParts.size() < 3) {
             return false;
         }
-        System.out.println(didParts);
+
         String scheme = didParts.get(0);
         String method = didParts.get(1);
 
