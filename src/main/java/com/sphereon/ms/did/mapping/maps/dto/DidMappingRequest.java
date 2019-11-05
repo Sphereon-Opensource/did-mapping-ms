@@ -1,6 +1,5 @@
 package com.sphereon.ms.did.mapping.maps.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 

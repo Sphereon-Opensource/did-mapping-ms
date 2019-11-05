@@ -10,11 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.MediaType;
 
-import java.util.Collections;
+import static java.util.Collections.singletonList;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +40,7 @@ public class DidMapController {
                                     @PathVariable(value = RestConstants.Param.USER_ID) String userId) {
         Optional<DidMap> didMap = didMapService.findDidMap(applicationId, userId);
         if(didMap.isPresent()){
-            return ResponseEntity.ok(new DidMappingResponse(Collections.singletonList(didMap.get())));
+            return ResponseEntity.ok(new DidMappingResponse(singletonList(didMap.get())));
         } else {
             return ResponseEntity.notFound().build();
         }
