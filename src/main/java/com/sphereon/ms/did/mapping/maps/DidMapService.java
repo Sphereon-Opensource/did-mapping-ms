@@ -25,9 +25,7 @@ public class DidMapService {
             }
         });
         didMapRepository.save(didMaps);
-        return didMaps.stream()
-                .peek(didMapRepository::save)
-                .collect(Collectors.toList());
+        return didMaps;
     }
 
     Optional<DidMap> findDidMap(String applicationId, String userId){
