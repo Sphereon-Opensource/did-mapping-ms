@@ -21,7 +21,7 @@
         <asciidoc.output-pdf.directory>${project.build.directory}/asciidoc/pdf</asciidoc.output-pdf.directory>
         <swagger.input>${swagger.output.dir}/swagger.sdk.json</swagger.input>
         <springfox.version>2.9.2</springfox.version>
-        <java.version>11.0.4</java.version>
+        <java.version>11</java.version>
     </properties>
 
     <parent>
