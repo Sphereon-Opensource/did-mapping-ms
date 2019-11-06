@@ -11,12 +11,13 @@ public class DidMap {
     private String applicationId;
     private DidInfo didInfo;
 
-    public DidMap(){}
+    public DidMap() {
+    }
 
     public DidMap(final String id,
                   final String userId,
                   final String applicationId,
-                  final DidInfo didInfo){
+                  final DidInfo didInfo) {
         this.id = id;
         this.userId = userId;
         this.applicationId = applicationId;
@@ -25,7 +26,7 @@ public class DidMap {
 
     public DidMap(final String userId,
                   final String applicationId,
-                  final DidInfo didInfo){
+                  final DidInfo didInfo) {
         this(null, userId, applicationId, didInfo);
     }
 
