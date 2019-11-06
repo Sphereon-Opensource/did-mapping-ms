@@ -1,6 +1,7 @@
 package com.sphereon.ms.did.mapping.utils;
 
 import com.sphereon.ms.did.mapping.config.DidConstants;
+import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -32,5 +33,9 @@ public class DidUtils {
             }
         }
         return false;
+    }
+
+    public static boolean isValidDidMap(DidMap didMap) {
+        return isValidDidFormat(didMap.getDidInfo().getDid());
     }
 }

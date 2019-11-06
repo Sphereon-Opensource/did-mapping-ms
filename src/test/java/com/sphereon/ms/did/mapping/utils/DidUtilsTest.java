@@ -1,11 +1,7 @@
-package com.sphereon.ms.did.mapping.maps;
+package com.sphereon.ms.did.mapping.utils;
 
-import com.sphereon.ms.did.mapping.utils.DidUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
 public class DidUtilsTest {
     @Test
     public void validDidFormatShouldBeValid(){
