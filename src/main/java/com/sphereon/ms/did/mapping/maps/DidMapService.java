@@ -1,5 +1,6 @@
 package com.sphereon.ms.did.mapping.maps;
 
+import com.sphereon.ms.did.mapping.maps.exceptions.DuplicateDidMapException;
 import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import com.sphereon.ms.did.mapping.utils.DidUtils;
@@ -20,8 +21,11 @@ public class DidMapService {
     List<DidMap> storeDidMaps(List<DidMap> didMaps) throws InvalidDidMapExcepion {
         //ToDo: add a check for didMap formatting and requirements
         didMaps.forEach(didMap -> {
-            if(!DidUtils.isValidDidMap(didMap)){
+            if (!DidUtils.isValidDidMap(didMap)) {
                 throw new InvalidDidMapExcepion();
+            }
+            if (didMapExists(didMap)){
+                throw new DuplicateDidMapException();
             }
         });
         didMapRepository.save(didMaps);
@@ -30,7 +34,11 @@ public class DidMapService {
                 .collect(Collectors.toList());
     }
 
-    Optional<DidMap> findDidMap(String applicationId, String userId){
+    Optional<DidMap> findDidMap(String applicationId, String userId) {
         return didMapRepository.findByApplicationIdAndUserId(applicationId, userId);
+    }
+
+    Boolean didMapExists(DidMap didMap) {
+        return didMapRepository.findByApplicationIdAndUserId(didMap.getApplicationId(), didMap.getUserId()).isPresent();
     }
 }

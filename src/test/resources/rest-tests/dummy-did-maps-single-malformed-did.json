@@ -1,0 +1,13 @@
+{
+  "didMaps": [
+    {
+      "userId": "test-user",
+      "applicationId": "test-application",
+      "didInfo": {
+        "did": "this-did-is-invalid",
+        "pushToken": "test-push-token",
+        "boxPub": "test-box-pub"
+      }
+    }
+  ]
+}
