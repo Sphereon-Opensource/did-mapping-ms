@@ -97,7 +97,7 @@ public class DidMapTest {
     }
 
     @Test
-    public void malformedDidMapPostShouldFail() throws IOException{
+    public void malformedDidMapPostShouldReturn400BadRequest() throws IOException{
         given()
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
                 .body(dummyDidMapsSingleInvalid.getInputStream())

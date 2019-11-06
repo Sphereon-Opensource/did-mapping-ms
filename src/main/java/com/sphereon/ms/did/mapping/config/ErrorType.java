@@ -8,4 +8,4 @@ public enum ErrorType {
     ErrorType(final String category) {
         this.category = category;
     }
-    }
+}
