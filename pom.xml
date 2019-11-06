@@ -186,34 +186,6 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
-            <!-- copy the generated documents -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.0.2</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/static/docs</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${asciidoc.output-html.directory}</directory>
-                                </resource>
-                                <resource>
-                                    <directory>${asciidoc.output-pdf.directory}</directory>
-                                </resource>
-                            </resources>
-                            <nonFilteredFileExtensions>
-                                <nonFilteredFileExtension>pdf</nonFilteredFileExtension>
-                            </nonFilteredFileExtensions>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
