@@ -21,6 +21,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
@@ -42,6 +44,9 @@ public class DidMapTest {
 
     @Value("classpath:rest-tests/dummy-did-maps-single-invalid.json")
     private Resource dummyDidMapsSingleInvalid;
+
+    @Value("classpath:rest-tests/dummy-did-maps-multiple.json")
+    private Resource dummyDidMapsMultiple;
 
     @Before
     public void setUp() {
@@ -114,5 +119,21 @@ public class DidMapTest {
                 .then()
                 .assertThat()
                 .statusCode(404);
+    }
+
+    @Test
+    public void multipleDidMapsShouldBePersisted() throws IOException{
+        given()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .body(dummyDidMapsMultiple.getInputStream())
+                .post("/didmaps")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body("didMaps.size()", is(3));
+        List<String> userIds = Arrays.asList("test-user0", "test-user1", "test-user2");
+        for(String userId : userIds){
+            assertTrue(didMapRepository.findByApplicationIdAndUserId("test-application", userId).isPresent());
+        }
     }
 }
