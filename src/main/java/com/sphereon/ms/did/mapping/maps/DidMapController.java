@@ -4,13 +4,11 @@ import com.sphereon.ms.did.mapping.config.RestConstants;
 import com.sphereon.ms.did.mapping.config.rest.ExceptionResponseBody;
 import com.sphereon.ms.did.mapping.maps.dto.DidMappingRequest;
 import com.sphereon.ms.did.mapping.maps.dto.DidMappingResponse;
-import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,10 +50,10 @@ public class DidMapController {
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     @ApiOperation(value = RestConstants.GetDidMap.SHORT_DESCRIPTION,
             nickname = RestConstants.GetDidMap.OPERATION_ID,
-            notes = RestConstants.StoreDidMaps.LONG_DESCRIPTION)
+            notes = RestConstants.GetDidMap.LONG_DESCRIPTION)
     @ApiResponses({
-            @ApiResponse(code = 200, message = "Did Map found.", response = ResponseEntity.class),
-            @ApiResponse(code = 404, message = "Did Map not found.", response=ResponseEntity.class)
+            @ApiResponse(code = 200, message = "Did Map found.", response = DidMappingResponse.class),
+            @ApiResponse(code = 404, message = "Did Map not found.")
     })
     public ResponseEntity getDidMap(@PathVariable(value = RestConstants.Param.APPLICATION_ID) String applicationId,
                                     @PathVariable(value = RestConstants.Param.USER_ID) String userId) {

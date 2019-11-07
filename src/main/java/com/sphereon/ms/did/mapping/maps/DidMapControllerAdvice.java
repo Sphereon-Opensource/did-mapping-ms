@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.util.Map.Entry;
+
 @ControllerAdvice
 public class DidMapControllerAdvice {
     @ResponseBody
     @ExceptionHandler(InvalidDidMapExcepion.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ExceptionResponseBody when(InvalidDidMapExcepion e) {
-        final String message = "One or more of the submitted DID maps was not formatted properly.";
+        final String message = e.getMessage();
         return new ExceptionResponseBody(ErrorType.INVALID_DID_MAP, message);
     }
 
@@ -24,8 +26,12 @@ public class DidMapControllerAdvice {
     @ExceptionHandler(DuplicateDidMapException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ExceptionResponseBody when(DuplicateDidMapException e) {
-        final String message = "One or more of the submitted DID maps has already been stored";
-        return new ExceptionResponseBody(ErrorType.DUPLICATE_DID_MAP, message);
+        final StringBuilder message = new StringBuilder(e.getMessage() + " Duplicates: [");
+        for(Entry id : e.getIdentifiers()){
+            message.append("(").append(id.getKey()).append(", ").append(id.getValue()).append("), ");
+        }
+        message.append("]");
+        return new ExceptionResponseBody(ErrorType.DUPLICATE_DID_MAP, message.toString());
     }
 
 
