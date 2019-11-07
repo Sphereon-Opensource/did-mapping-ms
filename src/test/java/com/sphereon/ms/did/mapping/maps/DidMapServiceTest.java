@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class})
 public class DidMapServiceTest {
-    private static final String didMappingRequestFrom = "(com.sphereon.ms.did.mapping.ResourceHelper).didMappingRequestFrom";
 
     @LocalServerPort
     private int port;
@@ -34,10 +33,10 @@ public class DidMapServiceTest {
     @Autowired
     private DidMapService didMapService;
 
-    @Value("#{T" + didMappingRequestFrom + "('classpath:rest-tests/dummy-did-maps-single.json')}")
+    @Value("#{@ResourceHelper.didMappingRequestFrom('classpath:rest-tests/dummy-did-maps-single.json')}")
     private DidMappingRequest dummyDidMapsSingle;
 
-    @Value("#{T" + didMappingRequestFrom + "('classpath:rest-tests/dummy-did-maps-single-malformed-did.json')}")
+    @Value("#{@ResourceHelper.didMappingRequestFrom('classpath:rest-tests/dummy-did-maps-single-malformed-did.json')}")
     private DidMappingRequest getDummyDidMapsSingleMalformedDid;
 
     @Before
