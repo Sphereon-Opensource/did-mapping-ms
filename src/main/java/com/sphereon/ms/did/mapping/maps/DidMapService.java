@@ -1,6 +1,8 @@
 package com.sphereon.ms.did.mapping.maps;
 
+import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
+import com.sphereon.ms.did.mapping.utils.DidUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -15,11 +17,15 @@ public class DidMapService {
         this.didMapRepository = didMapRepository;
     }
 
-    List<DidMap> storeDidMaps(List<DidMap> didMaps) {
+    List<DidMap> storeDidMaps(List<DidMap> didMaps) throws InvalidDidMapExcepion {
         //ToDo: add a check for didMap formatting and requirements
-        return didMaps.stream()
-                .peek(didMapRepository::save)
-                .collect(Collectors.toList());
+        didMaps.forEach(didMap -> {
+            if(!DidUtils.isValidDidMap(didMap)){
+                throw new InvalidDidMapExcepion();
+            }
+        });
+        didMapRepository.save(didMaps);
+        return didMaps;
     }
 
     Optional<DidMap> findDidMap(String applicationId, String userId){

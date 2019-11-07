@@ -1,0 +1,31 @@
+{
+  "didMaps": [
+    {
+      "userId": "test-user0",
+      "applicationId": "test-application",
+      "didInfo": {
+        "did": "did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74",
+        "pushToken": "test-push-token0",
+        "boxPub": "test-box-pub0"
+      }
+    },
+    {
+      "userId": "test-user1",
+      "applicationId": "test-application",
+      "didInfo": {
+        "did": "did:factom:fctf3beac30c498d9e26865f34fcaa57dbb935b0d74",
+        "pushToken": "test-push-token1",
+        "boxPub": "test-box-pub1"
+      }
+    },
+    {
+      "userId": "test-user2",
+      "applicationId": "test-application",
+      "didInfo": {
+        "did": "did:ethr:0xd45hjewyc498d9e26865f34fcaa57dbb935b0d74",
+        "pushToken": "test-push-token2",
+        "boxPub": "test-box-pub2"
+      }
+    }
+  ]
+}
