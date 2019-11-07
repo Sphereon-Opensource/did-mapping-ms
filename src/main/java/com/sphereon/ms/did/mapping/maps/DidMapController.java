@@ -51,7 +51,7 @@ public class DidMapController {
     @GetMapping(value = RestConstants.Endpoints.DidMapping.GET_DID,
             produces = {MediaType.APPLICATION_JSON_UTF8_VALUE})
     @ApiOperation(value = RestConstants.GetDidMap.SHORT_DESCRIPTION,
-            nickname = RestConstants.StoreDidMaps.OPERATION_ID,
+            nickname = RestConstants.GetDidMap.OPERATION_ID,
             notes = RestConstants.StoreDidMaps.LONG_DESCRIPTION)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Did Map found.", response = ResponseEntity.class),
