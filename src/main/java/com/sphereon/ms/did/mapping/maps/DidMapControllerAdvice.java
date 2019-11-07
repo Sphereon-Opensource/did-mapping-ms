@@ -16,7 +16,7 @@ public class DidMapControllerAdvice {
     @ExceptionHandler(InvalidDidMapExcepion.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ExceptionResponseBody when(InvalidDidMapExcepion e) {
-        final String message = "One or more of the submitted DID maps was not formatted properly.";
+        final String message = e.getMessage();
         return new ExceptionResponseBody(ErrorType.INVALID_DID_MAP, message);
     }
 
@@ -24,7 +24,7 @@ public class DidMapControllerAdvice {
     @ExceptionHandler(DuplicateDidMapException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     ExceptionResponseBody when(DuplicateDidMapException e) {
-        final String message = "One or more of the submitted DID maps has already been stored";
+        final String message = e.getMessage();
         return new ExceptionResponseBody(ErrorType.DUPLICATE_DID_MAP, message);
     }
 

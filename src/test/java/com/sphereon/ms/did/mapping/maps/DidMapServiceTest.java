@@ -9,7 +9,9 @@ import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import io.restassured.RestAssured;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class})
 public class DidMapServiceTest {
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
     @LocalServerPort
     private int port;
 
@@ -67,16 +72,22 @@ public class DidMapServiceTest {
         assertEquals(didMap.get().getDidInfo().getBoxPub(), "test-box-pub");
     }
 
-    @Test(expected = DuplicateDidMapException.class)
+    @Test
     public void saveDidMapRejectsAlreadySavedDid() throws IOException {
+        expectedException.expect(DuplicateDidMapException.class);
+        expectedException.expectMessage("One or more of the submitted DID maps has already been stored.");
+
         String didMapString = IOUtils.toString(dummyDidMapsSingle.getInputStream(), StandardCharsets.UTF_8);
         DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
         didMapRepository.save(didMappingRequest.getDidMaps());
         didMapService.storeDidMaps(didMappingRequest.getDidMaps());
     }
 
-    @Test(expected = InvalidDidMapExcepion.class)
+    @Test
     public void saveDidMapRejectsMalformedDid() throws IOException {
+        expectedException.expect(InvalidDidMapExcepion.class);
+        expectedException.expectMessage("One or more of the submitted DID maps was not formatted properly.");
+
         String didMapString = IOUtils.toString(getDummyDidMapsSingleMalformedDid.getInputStream(), StandardCharsets.UTF_8);
         DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
         didMapService.storeDidMaps(didMappingRequest.getDidMaps());

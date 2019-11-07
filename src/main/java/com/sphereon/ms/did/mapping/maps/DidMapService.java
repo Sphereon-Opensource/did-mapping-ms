@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class DidMapService {
@@ -22,10 +21,12 @@ public class DidMapService {
         //ToDo: add a check for didMap formatting and requirements
         didMaps.forEach(didMap -> {
             if (!DidUtils.isValidDidMap(didMap)) {
-                throw new InvalidDidMapExcepion();
+                String message = "One or more of the submitted DID maps was not formatted properly.";
+                throw new InvalidDidMapExcepion(message);
             }
-            if (didMapExists(didMap)){
-                throw new DuplicateDidMapException();
+            if (didMapExists(didMap)) {
+                String message = "One or more of the submitted DID maps has already been stored.";
+                throw new DuplicateDidMapException(message);
             }
         });
         didMapRepository.save(didMaps);
