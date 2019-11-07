@@ -1,13 +1,11 @@
 package com.sphereon.ms.did.mapping.maps;
 
-import com.google.gson.Gson;
 import com.sphereon.ms.did.mapping.Application;
 import com.sphereon.ms.did.mapping.maps.dto.DidMappingRequest;
 import com.sphereon.ms.did.mapping.maps.exceptions.DuplicateDidMapException;
 import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import io.restassured.RestAssured;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
@@ -28,6 +23,8 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {Application.class})
 public class DidMapServiceTest {
+    private static final String didMappingRequestFrom = "(com.sphereon.ms.did.mapping.ResourceHelper).didMappingRequestFrom";
+
     @LocalServerPort
     private int port;
 
@@ -37,14 +34,11 @@ public class DidMapServiceTest {
     @Autowired
     private DidMapService didMapService;
 
-    @Value("classpath:rest-tests/dummy-did-maps-single.json")
-    private Resource dummyDidMapsSingle;
+    @Value("#{T" + didMappingRequestFrom + "('classpath:rest-tests/dummy-did-maps-single.json')}")
+    private DidMappingRequest dummyDidMapsSingle;
 
-    @Value("classpath:rest-tests/dummy-did-maps-single-invalid.json")
-    private Resource dummyDidMapsSingleInvalid;
-
-    @Value("classpath:rest-tests/dummy-did-maps-single-malformed-did.json")
-    private Resource getDummyDidMapsSingleMalformedDid;
+    @Value("#{T" + didMappingRequestFrom + "('classpath:rest-tests/dummy-did-maps-single-malformed-did.json')}")
+    private DidMappingRequest getDummyDidMapsSingleMalformedDid;
 
     @Before
     public void setUp() {
@@ -53,10 +47,8 @@ public class DidMapServiceTest {
     }
 
     @Test
-    public void saveDidMapPersistsDidMap() throws IOException{
-        String didMapString = IOUtils.toString(dummyDidMapsSingle.getInputStream(), StandardCharsets.UTF_8);
-        DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
-        didMapService.storeDidMaps(didMappingRequest.getDidMaps());
+    public void saveDidMapPersistsDidMap() {
+        didMapService.storeDidMaps(dummyDidMapsSingle.getDidMaps());
         Optional<DidMap> didMap = didMapService.findDidMap("test-application", "test-user");
 
         assertTrue(didMap.isPresent());
@@ -68,17 +60,13 @@ public class DidMapServiceTest {
     }
 
     @Test(expected = DuplicateDidMapException.class)
-    public void saveDidMapRejectsAlreadySavedDid() throws IOException {
-        String didMapString = IOUtils.toString(dummyDidMapsSingle.getInputStream(), StandardCharsets.UTF_8);
-        DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
-        didMapRepository.save(didMappingRequest.getDidMaps());
-        didMapService.storeDidMaps(didMappingRequest.getDidMaps());
+    public void saveDidMapRejectsAlreadySavedDid() {
+        didMapRepository.save(dummyDidMapsSingle.getDidMaps());
+        didMapService.storeDidMaps(dummyDidMapsSingle.getDidMaps());
     }
 
     @Test(expected = InvalidDidMapExcepion.class)
-    public void saveDidMapRejectsMalformedDid() throws IOException {
-        String didMapString = IOUtils.toString(getDummyDidMapsSingleMalformedDid.getInputStream(), StandardCharsets.UTF_8);
-        DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
-        didMapService.storeDidMaps(didMappingRequest.getDidMaps());
+    public void saveDidMapRejectsMalformedDid() {
+        didMapService.storeDidMaps(getDummyDidMapsSingleMalformedDid.getDidMaps());
     }
 }
