@@ -48,6 +48,9 @@ public class DidMapTest {
     @Value("classpath:rest-tests/dummy-did-maps-multiple.json")
     private Resource dummyDidMapsMultiple;
 
+    @Value("classpath:rest-tests/dummy-did-maps-multiple-invalid.json")
+    private Resource dummyDidMapsMultipleInvalid;
+
     @Before
     public void setUp() {
         didMapRepository.deleteAll();
@@ -135,5 +138,16 @@ public class DidMapTest {
         for(String userId : userIds){
             assertTrue(didMapRepository.findByApplicationIdAndUserId("test-application", userId).isPresent());
         }
+    }
+
+    @Test
+    public void malformedMultipleDidMapsShouldReturn400BadRequest() throws IOException {
+        given()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .body(dummyDidMapsMultipleInvalid.getInputStream())
+                .post("/didmaps")
+                .then()
+                .assertThat()
+                .statusCode(400);
     }
 }
