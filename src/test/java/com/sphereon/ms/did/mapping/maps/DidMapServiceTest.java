@@ -1,13 +1,11 @@
 package com.sphereon.ms.did.mapping.maps;
 
-import com.google.gson.Gson;
 import com.sphereon.ms.did.mapping.Application;
 import com.sphereon.ms.did.mapping.maps.dto.DidMappingRequest;
 import com.sphereon.ms.did.mapping.maps.exceptions.DuplicateDidMapException;
 import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import io.restassured.RestAssured;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -17,11 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
@@ -42,14 +37,11 @@ public class DidMapServiceTest {
     @Autowired
     private DidMapService didMapService;
 
-    @Value("classpath:rest-tests/dummy-did-maps-single.json")
-    private Resource dummyDidMapsSingle;
+    @Value("#{@ResourceHelper.didMappingRequestFrom('classpath:rest-tests/dummy-did-maps-single.json')}")
+    private DidMappingRequest dummyDidMapsSingle;
 
-    @Value("classpath:rest-tests/dummy-did-maps-single-invalid.json")
-    private Resource dummyDidMapsSingleInvalid;
-
-    @Value("classpath:rest-tests/dummy-did-maps-single-malformed-did.json")
-    private Resource getDummyDidMapsSingleMalformedDid;
+    @Value("#{@ResourceHelper.didMappingRequestFrom('classpath:rest-tests/dummy-did-maps-single-malformed-did.json')}")
+    private DidMappingRequest getDummyDidMapsSingleMalformedDid;
 
     @Before
     public void setUp() {
@@ -58,10 +50,8 @@ public class DidMapServiceTest {
     }
 
     @Test
-    public void saveDidMapPersistsDidMap() throws IOException{
-        String didMapString = IOUtils.toString(dummyDidMapsSingle.getInputStream(), StandardCharsets.UTF_8);
-        DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
-        didMapService.storeDidMaps(didMappingRequest.getDidMaps());
+    public void saveDidMapPersistsDidMap() {
+        didMapService.storeDidMaps(dummyDidMapsSingle.getDidMaps());
         Optional<DidMap> didMap = didMapService.findDidMap("test-application", "test-user");
 
         assertTrue(didMap.isPresent());
@@ -73,23 +63,19 @@ public class DidMapServiceTest {
     }
 
     @Test
-    public void saveDidMapRejectsAlreadySavedDid() throws IOException {
+    public void saveDidMapRejectsAlreadySavedDid() {
         expectedException.expect(DuplicateDidMapException.class);
         expectedException.expectMessage("One or more of the submitted DID maps has already been stored.");
 
-        String didMapString = IOUtils.toString(dummyDidMapsSingle.getInputStream(), StandardCharsets.UTF_8);
-        DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
-        didMapRepository.save(didMappingRequest.getDidMaps());
-        didMapService.storeDidMaps(didMappingRequest.getDidMaps());
+        didMapRepository.save(dummyDidMapsSingle.getDidMaps());
+        didMapService.storeDidMaps(dummyDidMapsSingle.getDidMaps());
     }
 
     @Test
-    public void saveDidMapRejectsMalformedDid() throws IOException {
+    public void saveDidMapRejectsMalformedDid() {
         expectedException.expect(InvalidDidMapExcepion.class);
         expectedException.expectMessage("One or more of the submitted DID maps was not formatted properly.");
 
-        String didMapString = IOUtils.toString(getDummyDidMapsSingleMalformedDid.getInputStream(), StandardCharsets.UTF_8);
-        DidMappingRequest didMappingRequest = new Gson().fromJson(didMapString, DidMappingRequest.class);
-        didMapService.storeDidMaps(didMappingRequest.getDidMaps());
+        didMapService.storeDidMaps(getDummyDidMapsSingleMalformedDid.getDidMaps());
     }
 }
