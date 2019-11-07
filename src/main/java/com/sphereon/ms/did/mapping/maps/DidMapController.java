@@ -55,7 +55,7 @@ public class DidMapController {
             notes = RestConstants.StoreDidMaps.LONG_DESCRIPTION)
     @ApiResponses({
             @ApiResponse(code = 200, message = "Did Map found.", response = DidMappingResponse.class),
-            @ApiResponse(code = 404, message = "Did Map not found.", response = ResponseEntity.class)
+            @ApiResponse(code = 404, message = "Did Map not found.")
     })
     public ResponseEntity getDidMap(@PathVariable(value = RestConstants.Param.APPLICATION_ID) String applicationId,
                                     @PathVariable(value = RestConstants.Param.USER_ID) String userId) {
