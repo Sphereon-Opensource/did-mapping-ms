@@ -149,5 +149,6 @@ public class DidMapTest {
                 .then()
                 .assertThat()
                 .statusCode(400);
+        assertEquals(didMapRepository.count(), 0);
     }
 }
