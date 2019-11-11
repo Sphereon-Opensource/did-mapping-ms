@@ -46,9 +46,6 @@ public class DidMapServiceTest {
     @Value("#{@ResourceHelper.didMappingRequestFrom('classpath:rest-tests/dummy-did-maps-duplicate-dids.json')}")
     private DidMappingRequest dummyDidMapsSameDid;
 
-    @Value("#{@ResourceHelper.didMappingRequestFrom('classpath:rest-tests/dummy-did-maps-duplicate-id-combo.json')}")
-    private DidMappingRequest dummyDidMapSameUserAppIdCombo;
-
     @Before
     public void setUp() {
         didMapRepository.deleteAll();

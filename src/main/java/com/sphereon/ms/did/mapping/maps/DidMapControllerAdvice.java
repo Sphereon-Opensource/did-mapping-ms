@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.dao.DuplicateKeyException;
 
 import java.util.List;
 
@@ -30,5 +31,12 @@ public class DidMapControllerAdvice {
     DidMapExceptionResponseBody when(DuplicateDidMapException e) {
         List<DidMapId> identifiers = DidMapId.listFromDidMaps(e.getDuplicateDidMaps());
         return new DidMapExceptionResponseBody(ErrorType.DUPLICATE_DID_MAP, e.getMessage(), identifiers);
+    }
+
+    @ResponseBody
+    @ExceptionHandler(DuplicateKeyException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    ExceptionResponseBody when(DuplicateKeyException e){
+        return new ExceptionResponseBody(ErrorType.DUPLICATE_DID_MAP_FIELD, e.getMessage());
     }
 }
