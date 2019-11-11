@@ -4,7 +4,7 @@ import com.sphereon.ms.did.mapping.config.ErrorType;
 import com.sphereon.ms.did.mapping.config.rest.DidMapExceptionResponseBody;
 import com.sphereon.ms.did.mapping.config.rest.ExceptionResponseBody;
 import com.sphereon.ms.did.mapping.maps.exceptions.DuplicateDidMapException;
-import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
+import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapException;
 import com.sphereon.ms.did.mapping.maps.model.DidMapId;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,9 +17,9 @@ import java.util.List;
 @ControllerAdvice
 public class DidMapControllerAdvice {
     @ResponseBody
-    @ExceptionHandler(InvalidDidMapExcepion.class)
+    @ExceptionHandler(InvalidDidMapException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    ExceptionResponseBody when(InvalidDidMapExcepion e) {
+    ExceptionResponseBody when(InvalidDidMapException e) {
         final String message = e.getMessage();
         return new ExceptionResponseBody(ErrorType.INVALID_DID_MAP, message);
     }

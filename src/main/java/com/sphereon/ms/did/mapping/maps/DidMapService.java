@@ -1,7 +1,7 @@
 package com.sphereon.ms.did.mapping.maps;
 
 import com.sphereon.ms.did.mapping.maps.exceptions.DuplicateDidMapException;
-import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
+import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapException;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import com.sphereon.ms.did.mapping.utils.DidUtils;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class DidMapService {
         this.didMapRepository = didMapRepository;
     }
 
-    List<DidMap> storeDidMaps(List<DidMap> didMaps) throws InvalidDidMapExcepion {
+    List<DidMap> storeDidMaps(List<DidMap> didMaps) throws InvalidDidMapException {
         //ToDo: add a check for didMap boxPub and pushToken formats
         List<DidMap> duplicateDidMaps = didMaps.stream()
                 .filter(this::didMapExists)

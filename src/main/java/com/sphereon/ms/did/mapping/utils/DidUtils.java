@@ -1,7 +1,7 @@
 package com.sphereon.ms.did.mapping.utils;
 
 import com.sphereon.ms.did.mapping.config.DidConstants;
-import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
+import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapException;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import org.springframework.util.StringUtils;
 
@@ -9,6 +9,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class DidUtils {
+
+    public static void assertValidDidMap(DidMap didMap) throws InvalidDidMapException {
+        if (!isValidDidMap(didMap)) {
+            String message = "One or more of the submitted DID maps was not formatted properly.";
+            throw new InvalidDidMapException(message);
+        }
+    }
 
     public static Boolean isValidDidFormat(String did) {
         if (StringUtils.isEmpty(did)) {
@@ -40,10 +47,4 @@ public class DidUtils {
         return isValidDidFormat(didMap.getDidInfo().getDid());
     }
 
-    public static void assertValidDidMap(DidMap didMap) throws InvalidDidMapExcepion {
-        if(!isValidDidMap(didMap)){
-            String message = "One or more of the submitted DID maps was not formatted properly.";
-            throw new InvalidDidMapExcepion(message);
-        }
-    }
 }

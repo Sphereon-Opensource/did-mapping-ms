@@ -3,7 +3,7 @@ package com.sphereon.ms.did.mapping.maps;
 import com.sphereon.ms.did.mapping.Application;
 import com.sphereon.ms.did.mapping.maps.dto.DidMappingRequest;
 import com.sphereon.ms.did.mapping.maps.exceptions.DuplicateDidMapException;
-import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapExcepion;
+import com.sphereon.ms.did.mapping.maps.exceptions.InvalidDidMapException;
 import com.sphereon.ms.did.mapping.maps.model.DidMap;
 import io.restassured.RestAssured;
 import org.junit.Before;
@@ -79,7 +79,7 @@ public class DidMapServiceTest {
 
     @Test
     public void saveDidMapRejectsMalformedDid() {
-        expectedException.expect(InvalidDidMapExcepion.class);
+        expectedException.expect(InvalidDidMapException.class);
         expectedException.expectMessage("One or more of the submitted DID maps was not formatted properly.");
 
         didMapService.storeDidMaps(getDummyDidMapsSingleMalformedDid.getDidMaps());
