@@ -1,16 +1,17 @@
 package com.sphereon.ms.did.mapping.maps.exceptions;
 
+import com.sphereon.ms.did.mapping.maps.model.DidMap;
+
 import java.util.List;
-import java.util.Map.Entry;
 
 public class DuplicateDidMapException extends RuntimeException {
-    private final List<Entry<String, String>> identifiers;
-    public DuplicateDidMapException(String message, List<Entry<String, String>> identifiers){
+    private final List<DidMap> duplicateDidMaps;
+    public DuplicateDidMapException(String message, List<DidMap> duplicateDidMaps){
         super(message);
-        this.identifiers = identifiers;
+        this.duplicateDidMaps = duplicateDidMaps;
     }
 
-    public List<Entry<String, String>> getIdentifiers() {
-        return identifiers;
+    public List<DidMap> getDuplicateDidMaps() {
+        return duplicateDidMaps;
     }
 }
