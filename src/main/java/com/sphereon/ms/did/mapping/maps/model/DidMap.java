@@ -1,7 +1,15 @@
 package com.sphereon.ms.did.mapping.maps.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
+@CompoundIndexes({
+        @CompoundIndex(def = "{'applicationId':1, 'userId':1}", unique = true),
+        @CompoundIndex(def = "{'applicationId':1, 'didInfo.did':1}", unique = true)
+})
 public class DidMap {
 
     @Id

@@ -1,0 +1,22 @@
+{
+  "didMaps": [
+    {
+      "userId": "test-user",
+      "applicationId": "test-application",
+      "didInfo": {
+        "did": "did:ethr:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74",
+        "pushToken": "test-push-token",
+        "boxPub": "test-box-pub"
+      }
+    },
+    {
+      "userId": "test-user",
+      "applicationId": "test-application",
+      "didInfo": {
+        "did": "did:factom:0xf3beac30c498d9e26865f34fcaa57dbb935b0d74",
+        "pushToken": "test-push-token",
+        "boxPub": "test-box-pub"
+      }
+    }
+  ]
+}
