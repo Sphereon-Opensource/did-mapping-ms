@@ -13,10 +13,10 @@ A microservice for storing associations between user IDs and DIDs for applicatio
       mongo
       > use did_mapping
       ```
-   * Configure DID Mapping (`src/main/resources/application.properties`) with the correct Mongo information. The default is bellow:
+   * If Mongo is not running in the default location, configure DID Mapping with the correct Mongo information. Create an `application.properties`, copy and replace the following variables in `<>` with your own values.
       ````bash
-     spring.data.mongodb.host=127.0.0.1
-     spring.data.mongodb.port=27017
+     spring.data.mongodb.host=<mongo-host>
+     spring.data.mongodb.port=<mongo-host-port>
      spring.data.mongodb.database=did_mapping
       ````
 * Run tests, build jar, and run DID Mapping using:
