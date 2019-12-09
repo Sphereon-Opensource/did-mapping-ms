@@ -6,7 +6,7 @@
 
     <groupId>com.sphereon.ms.did.mapping</groupId>
     <artifactId>did-mapping</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>Sphereon DID Mapping</name>
     <description>A microservice for storing associations between user IDs and DIDs for applications that want to use DID-Auth</description>
@@ -110,7 +110,6 @@
             <version>2.8.6</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -130,6 +129,24 @@
                         </io.springfox.staticdocs.snippetsOutputDir>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.sphereon.ms.did.mapping.Application</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
