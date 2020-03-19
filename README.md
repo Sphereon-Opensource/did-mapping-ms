@@ -21,9 +21,14 @@ A microservice for storing associations between user IDs and DIDs for applicatio
       ````
 * Run tests, build jar, and run DID Mapping using:
     ````bash
-  mvn package
+  mvn
   java -jar target/did-mapping-1.0-SNAPSHOT.jar 
   ````
+* Regenerate swagger json after modifications to the REST API or models
+    ````bash
+  mvn -Pwrite-swagger-json
+    ````
+  
 ## Documentation
 By default, once the service is running, documentation and example API calls can be found at:
 * http://localhost:8080/swagger-ui.html#/did-map-controller

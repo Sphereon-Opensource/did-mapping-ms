@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sphereon.ms.did.mapping</groupId>
     <artifactId>did-mapping</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 
     <name>Sphereon DID Mapping</name>
-    <description>A microservice for storing associations between user IDs and DIDs for applications that want to use
-        DID-Auth
-    </description>
+    <description>A microservice for storing associations between user IDs and DIDs for applications that want to use DID-Auth</description>
 
     <properties>
         <java.version>11</java.version>
@@ -21,7 +18,6 @@
         <asciidoc.snippet.directory>${project.build.directory}/asciidoc/snippets</asciidoc.snippet.directory>
         <asciidoc.generated.directory>${project.build.directory}/asciidoc/generated</asciidoc.generated.directory>
         <swagger.input>${swagger.output.dir}/swagger.sdk.json</swagger.input>
-        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
         <springfox.version>2.9.2</springfox.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     </properties>
@@ -30,6 +26,7 @@
         <connection>scm:git:git@github.com:Sphereon-Opensource/did-mapping-ms.git</connection>
         <developerConnection>scm:git:git@github.com:Sphereon-Opensource/did-mapping-ms.git</developerConnection>
         <url>https://github.com/Sphereon-Opensource/did-mapping-ms</url>
+        <tag>v1.0</tag>
     </scm>
 
     <licenses>
@@ -148,33 +145,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
-                <configuration>
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <!-- Keep changes in the local repo, push will be done afterwards -->
-                    <pushChanges>false</pushChanges>
-                    <localCheckout>true</localCheckout>
-                    <!-- Use a better name for the tag -->
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>${maven-scm-provider-gitexe.version}</version>
-                    </dependency>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-api</artifactId>
-                        <version>1.11.2</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-
         </plugins>
     </build>
 
