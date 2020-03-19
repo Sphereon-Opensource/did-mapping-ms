@@ -9,18 +9,45 @@
     <version>1.0-SNAPSHOT</version>
 
     <name>Sphereon DID Mapping</name>
-    <description>A microservice for storing associations between user IDs and DIDs for applications that want to use DID-Auth</description>
+    <description>A microservice for storing associations between user IDs and DIDs for applications that want to use
+        DID-Auth
+    </description>
 
     <properties>
+        <java.version>11</java.version>
         <swagger2markup.version>1.3.1</swagger2markup.version>
         <asciidoc.input.directory>${project.basedir}/src/docs/asciidoc</asciidoc.input.directory>
         <swagger.output.dir>${project.basedir}/src/main/resources/swagger</swagger.output.dir>
         <asciidoc.snippet.directory>${project.build.directory}/asciidoc/snippets</asciidoc.snippet.directory>
         <asciidoc.generated.directory>${project.build.directory}/asciidoc/generated</asciidoc.generated.directory>
         <swagger.input>${swagger.output.dir}/swagger.sdk.json</swagger.input>
+        <maven-scm-provider-gitexe.version>1.11.2</maven-scm-provider-gitexe.version>
         <springfox.version>2.9.2</springfox.version>
-        <java.version>11</java.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:Sphereon-Opensource/did-mapping-ms.git</connection>
+        <developerConnection>scm:git:git@github.com:Sphereon-Opensource/did-mapping-ms.git</developerConnection>
+        <url>https://github.com/Sphereon-Opensource/did-mapping-ms</url>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Sphereon Devops Team</name>
+            <email>dev@sphereon.com</email>
+            <organization>Sphereon B.V.</organization>
+            <organizationUrl>https://sphereon.com</organizationUrl>
+        </developer>
+    </developers>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -32,6 +59,10 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -117,76 +148,136 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- First, use the swagger2markup plugin to generate asciidoc -->
+
             <plugin>
-                <groupId>io.github.swagger2markup</groupId>
-                <artifactId>swagger2markup-maven-plugin</artifactId>
-                <version>${swagger2markup.version}</version>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>${maven-release-plugin.version}</version>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <!-- Keep changes in the local repo, push will be done afterwards -->
+                    <pushChanges>false</pushChanges>
+                    <localCheckout>true</localCheckout>
+                    <!-- Use a better name for the tag -->
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                </configuration>
                 <dependencies>
                     <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-import-files-ext</artifactId>
-                        <version>${swagger2markup.version}</version>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>${maven-scm-provider-gitexe.version}</version>
                     </dependency>
                     <dependency>
-                        <groupId>io.github.swagger2markup</groupId>
-                        <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
-                        <version>${swagger2markup.version}</version>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-api</artifactId>
+                        <version>1.11.2</version>
                     </dependency>
                 </dependencies>
-                <configuration>
-                    <swaggerInput>${swagger.input}</swaggerInput>
-                    <outputDir>${asciidoc.generated.directory}</outputDir>
-                    <config>
-                        <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
-                        <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
-                        <swagger2markup.extensions.dynamicOverview.contentPath>
-                            ${asciidoc.input.directory}/extensions/overview
-                        </swagger2markup.extensions.dynamicOverview.contentPath>
-                        <swagger2markup.extensions.dynamicDefinitions.contentPath>
-                            ${asciidoc.input.directory}/extensions/definitions
-                        </swagger2markup.extensions.dynamicDefinitions.contentPath>
-                        <swagger2markup.extensions.dynamicPaths.contentPath>
-                            ${asciidoc.input.directory}/extensions/paths
-                        </swagger2markup.extensions.dynamicPaths.contentPath>
-                        <swagger2markup.extensions.dynamicSecurity.contentPath>
-                            ${asciidoc.input.directory}/extensions/security/
-                        </swagger2markup.extensions.dynamicSecurity.contentPath>
+            </plugin>
 
-                        <swagger2markup.extensions.springRestDocs.snippetBaseUri>${asciidoc.snippet.directory}
-                        </swagger2markup.extensions.springRestDocs.snippetBaseUri>
-                        <swagger2markup.extensions.springRestDocs.defaultSnippets>true
-                        </swagger2markup.extensions.springRestDocs.defaultSnippets>
-                    </config>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>convertSwagger2markup</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <inherited>true</inherited>
-                <configuration>
-                    <forkCount>1</forkCount>
-                    <reuseForks>false</reuseForks>
-                    <excludes>
-                        <exclude>**/*KT.java</exclude>
-                    </excludes>
-                    <systemPropertyVariables>
-                        <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
-                        <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}
-                        </io.springfox.staticdocs.snippetsOutputDir>
-                    </systemPropertyVariables>
-                </configuration>
-            </plugin>
+
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>write-swagger-json</id>
+            <build>
+                <defaultGoal>clean compile test</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M4</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <includes combine.self="override">
+                                <include>WriteSwaggerJson.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>asciidoc-test</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <defaultGoal>clean compile test package</defaultGoal>
+                <plugins>
+                    <!-- First, use the swagger2markup plugin to generate asciidoc -->
+                    <plugin>
+                        <groupId>io.github.swagger2markup</groupId>
+                        <artifactId>swagger2markup-maven-plugin</artifactId>
+                        <version>${swagger2markup.version}</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>io.github.swagger2markup</groupId>
+                                <artifactId>swagger2markup-import-files-ext</artifactId>
+                                <version>${swagger2markup.version}</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>io.github.swagger2markup</groupId>
+                                <artifactId>swagger2markup-spring-restdocs-ext</artifactId>
+                                <version>${swagger2markup.version}</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <swaggerInput>${swagger.input}</swaggerInput>
+                            <outputDir>${asciidoc.generated.directory}</outputDir>
+                            <config>
+                                <swagger2markup.markupLanguage>ASCIIDOC</swagger2markup.markupLanguage>
+                                <swagger2markup.pathsGroupedBy>TAGS</swagger2markup.pathsGroupedBy>
+                                <swagger2markup.extensions.dynamicOverview.contentPath>
+                                    ${asciidoc.input.directory}/extensions/overview
+                                </swagger2markup.extensions.dynamicOverview.contentPath>
+                                <swagger2markup.extensions.dynamicDefinitions.contentPath>
+                                    ${asciidoc.input.directory}/extensions/definitions
+                                </swagger2markup.extensions.dynamicDefinitions.contentPath>
+                                <swagger2markup.extensions.dynamicPaths.contentPath>
+                                    ${asciidoc.input.directory}/extensions/paths
+                                </swagger2markup.extensions.dynamicPaths.contentPath>
+                                <swagger2markup.extensions.dynamicSecurity.contentPath>
+                                    ${asciidoc.input.directory}/extensions/security/
+                                </swagger2markup.extensions.dynamicSecurity.contentPath>
+
+                                <swagger2markup.extensions.springRestDocs.snippetBaseUri>${asciidoc.snippet.directory}
+                                </swagger2markup.extensions.springRestDocs.snippetBaseUri>
+                                <swagger2markup.extensions.springRestDocs.defaultSnippets>true
+                                </swagger2markup.extensions.springRestDocs.defaultSnippets>
+                            </config>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>convertSwagger2markup</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M4</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <excludes>
+                                <exclude>**/WriteSwaggerJson.java</exclude>
+                            </excludes>
+                            <systemPropertyVariables>
+                                <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
+                                <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}</io.springfox.staticdocs.snippetsOutputDir>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
