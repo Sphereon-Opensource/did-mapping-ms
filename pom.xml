@@ -5,7 +5,7 @@
 
     <groupId>com.sphereon.ms.did.mapping</groupId>
     <artifactId>did-mapping</artifactId>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
 
     <name>Sphereon DID Mapping</name>
     <description>A microservice for storing associations between user IDs and DIDs for applications that want to use DID-Auth</description>
@@ -19,15 +19,7 @@
         <asciidoc.generated.directory>${project.build.directory}/asciidoc/generated</asciidoc.generated.directory>
         <swagger.input>${swagger.output.dir}/swagger.sdk.json</swagger.input>
         <springfox.version>2.9.2</springfox.version>
-        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     </properties>
-
-    <scm>
-        <connection>scm:git:git@github.com:Sphereon-Opensource/did-mapping-ms.git</connection>
-        <developerConnection>scm:git:git@github.com:Sphereon-Opensource/did-mapping-ms.git</developerConnection>
-        <url>https://github.com/Sphereon-Opensource/did-mapping-ms</url>
-        <tag>v1.0</tag>
-    </scm>
 
     <licenses>
         <license>
@@ -56,10 +48,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -237,9 +225,6 @@
                         <configuration>
                             <forkCount>1</forkCount>
                             <reuseForks>false</reuseForks>
-                            <excludes>
-                                <exclude>**/WriteSwaggerJson.java</exclude>
-                            </excludes>
                             <systemPropertyVariables>
                                 <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
                                 <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}</io.springfox.staticdocs.snippetsOutputDir>

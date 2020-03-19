@@ -103,7 +103,7 @@
       }
     }
   },
-  "host": "localhost:54238",
+  "host": "localhost:57496",
   "definitions": {
     "DidMappingResponse": {
       "type": "object",

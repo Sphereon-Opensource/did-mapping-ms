@@ -22,7 +22,7 @@ import java.nio.file.StandardOpenOption;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = TestConfigWriteSwagger.class, properties = {"management.port=0", "spring.data.mongodb.port=0"})
-//@ActiveProfiles("write-swagger")
+@ActiveProfiles("write-swagger-json")
 public class WriteSwaggerJson {
     @Value("${local.server.port}")
     private String port;

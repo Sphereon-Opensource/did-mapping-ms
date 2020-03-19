@@ -9,7 +9,7 @@ import org.springframework.context.support.SimpleThreadScope;
 
 @Configuration
 @ComponentScan(basePackages = {"com.sphereon"})
-//@Profile("write-swagger")
+@Profile("write-swagger-json")
 public class TestConfigWriteSwagger {
 
     @Bean
