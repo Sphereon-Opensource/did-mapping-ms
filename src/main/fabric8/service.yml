@@ -6,9 +6,9 @@ metadata:
 spec:
   type: ${fabric8.service.type}
   ports:
-  - port: ${http.port.exposed}
+  - port: ${tcp.port.exposed}
     protocol: TCP
-    targetPort: ${http.port}
-    name: ms-http
+    targetPort: ${tcp.port.internal}
+    name: ms-port
   selector:
     app: ${project.artifactId}

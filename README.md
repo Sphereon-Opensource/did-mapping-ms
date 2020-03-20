@@ -29,6 +29,28 @@ A microservice for storing associations between user IDs and DIDs for applicatio
   mvn -Pwrite-swagger-json
     ````
   
+## Docker & Kubernetes support
+* To build a docker image
+    ````bash
+  mvn -Pf8-build
+    ````
+* To start a docker container
+    ````bash
+  mvn -Pdocker-start
+    ````
+* To push the image to a remote registry
+    ````bash
+  mvn -Pf8-push
+    ````
+* To apply the service to Kubernetes
+    ````bash
+  mvn -Pf8-apply
+    ````
+* Itś possible to combine
+    ````bash
+  mvn -Pf8-build -Pf8-push -Pf8-apply
+    ````
+
 ## Documentation
 By default, once the service is running, documentation and example API calls can be found at:
 * http://localhost:8080/swagger-ui.html#/did-map-controller

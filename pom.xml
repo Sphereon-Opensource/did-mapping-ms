@@ -19,17 +19,27 @@
         <swagger.input>${swagger.output.dir}/swagger.sdk.json</swagger.input>
 
 
-        <!-- Docker chainSettings -->
-        <docker.registry.push>hostname</docker.registry.push> <!-- Create <server> section in .m2/chainSettings.xml with this
-                                                                     registry as id to authenticate to the private registry -->
+        <!-- Docker settings -->
+        <docker.registry.push>hostname</docker.registry.push> <!-- Create <server> section in .m2/chainSettings.xml with this registry
+                                                                    as id to authenticate to the private registry -->
         <docker.registry.push.secret-name>registry-secret</docker.registry.push.secret-name>
-        <docker.registry.pull>docker.io</docker.registry.pull> <!-- Create <server> section in .m2/chainSettings.xml with this
-                                                                                registry as id to authenticate to the private registry -->
-        <fabric8.generator.from>adoptopenjdk:11.0.6_10-jre-hotspot</fabric8.generator.from>
-        <docker.repository>${project.artifactId}</docker.repository>
-        <http.port>8080</http.port>
-        <http.port.exposed>8061</http.port.exposed>
+        <docker.registry.pull>docker.io</docker.registry.pull> <!-- Create <server> section in .m2/chainSettings.xml with this registry as id to authenticate to the
+                                                                      private registry, or do a docker login -u <user> manually -->
 
+        <fabric8.generator.from>fabric8/java-alpine-openjdk11-jre</fabric8.generator.from>
+        <docker.repository>${fabric8.label.provider}/${project.artifactId}</docker.repository>
+        <docker.version-tag>latest</docker.version-tag>
+
+        <!-- AJP mode -->
+        <container.enable-tomcat-ajp>true</container.enable-tomcat-ajp>
+        <tcp.port.internal>8009</tcp.port.internal>
+        <tcp.port.exposed>8901</tcp.port.exposed>
+
+        <!-- HTTP mode --> <!-- uncomment to use enable
+        <container.enable-tomcat-ajp>false</container.enable-tomcat-ajp>
+        <tcp.port.internal>8080</tcp.port.internal>
+        <tcp.port.exposed>8801</tcp.port.exposed>
+        -->
 
         <!-- Fabric8 Kubernetes Metadata -->
         <fabric8.namespace>dev</fabric8.namespace>
@@ -202,49 +212,121 @@
                         <groupId>io.fabric8</groupId>
                         <artifactId>fabric8-maven-plugin</artifactId>
                         <configuration>
-                            <!--<pushRegistry>${docker.registry.push}</pushRegistry> enable when properly configured -->
                             <pullRegistry>${docker.registry.pull}</pullRegistry>
                             <verbose>true</verbose>
                             <logStdout>true</logStdout>
+                            <images>
+                                <image>
+                                    <name>${docker.repository}:${docker.version-tag}</name>
+                                    <build>
+                                        <from>${fabric8.generator.from}</from>
+                                        <assembly>
+                                            <basedir>/deployments</basedir>
+                                            <descriptorRef>artifact</descriptorRef>
+                                        </assembly>
+                                        <ports>
+                                            <port>${tcp.port.internal}</port>
+                                        </ports>
+                                    </build>
+                                </image>
+                            </images>
+                            <helm>
+                                <chart>${project.artifactId}</chart>
+                                <keywords>did,digital-identity,sphereon</keywords>
+                            </helm>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>f8-push</id>
+            <build>
+                <defaultGoal>fabric8:push</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>fabric8-maven-plugin</artifactId>
+                        <configuration>
+                            <pushRegistry>${docker.registry.push}</pushRegistry>
+                            <verbose>true</verbose>
+                            <logStdout>true</logStdout>
+                            <images>
+                                <image>
+                                    <name>${docker.repository}:${docker.version-tag}</name>
+                                </image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>f8-apply</id>
+            <build>
+                <defaultGoal>fabric8:apply</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>fabric8-maven-plugin</artifactId>
+                        <configuration>
+                            <pushRegistry>${docker.registry.push}</pushRegistry>
+                            <verbose>true</verbose>
+                            <logStdout>true</logStdout>
+                            <images>
+                                <image>
+                                    <name>${docker.repository}:${docker.version-tag}</name>
+                                </image>
+                            </images>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>docker-start</id>
+            <build>
+                <defaultGoal>docker:start</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.33.0</version>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>${docker.repository}:${docker.version-tag}</name>
+                                    <alias>${fabric8.namespace}_${project.artifactId}</alias>
+                                    <run>
+                                        <namingStrategy>alias</namingStrategy>
+                                        <dependsOn>
+                                            <container>mongo</container>
+                                        </dependsOn>
+                                        <links>
+                                            <link>mongo</link>
+                                        </links>
+                                        <ports>
+                                            <port>${tcp.port.exposed}:${tcp.port.internal}</port>
+                                        </ports>
+                                        <env>
+                                            <JAVA_OPTIONS>-Dspring.data.mongodb.host=mongo
+                                                -Dtomcat.protocol.ajp=${container.enable-tomcat-ajp}
+                                            </JAVA_OPTIONS>
+                                        </env>
+                                    </run>
+                                </image>
+                            </images>
+                        </configuration>
+
                         <executions>
                             <execution>
-                                <id>build-image</id>
+                                <id>start</id>
+                                <phase>pre-integration-test</phase>
                                 <goals>
-                                    <goal>resource</goal>
+                                    <goal>stop</goal>
                                     <goal>build</goal>
-                                    <goal>helm</goal>
+                                    <goal>start</goal>
                                 </goals>
-                                <configuration>
-                                    <images>
-                                        <image>
-                                            <name>${docker.repository}:${project.version}</name>
-                                            <build>
-                                                <from>${fabric8.generator.from}</from>
-                                                <dockerFileDir>${project.basedir}</dockerFileDir>
-                                                <assembly>
-                                                    <basedir>/deployments</basedir>
-                                                    <descriptorRef>artifact</descriptorRef>
-                                                </assembly>
-                                                <ports>
-                                                    <port>${http.port}</port>
-                                                </ports>
-                                            </build>
-                                            <run>
-                                                <namingStrategy>alias</namingStrategy>
-                                                <dependsOn>
-                                                    <container>mongo</container>
-                                                </dependsOn>
-                                                <links>
-                                                    <link>mongo</link>
-                                                </links>
-                                                <ports>
-                                                    <port>${http.port.exposed}:%{http.port}</port>
-                                                </ports>
-                                            </run>
-                                        </image>
-                                    </images>
-                                </configuration>
                             </execution>
                         </executions>
                     </plugin>
@@ -319,8 +401,10 @@
                             <forkCount>1</forkCount>
                             <reuseForks>false</reuseForks>
                             <systemPropertyVariables>
-                                <io.springfox.staticdocs.outputDir>${swagger.output.dir}</io.springfox.staticdocs.outputDir>
-                                <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}</io.springfox.staticdocs.snippetsOutputDir>
+                                <io.springfox.staticdocs.outputDir>${swagger.output.dir}
+                                </io.springfox.staticdocs.outputDir>
+                                <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}
+                                </io.springfox.staticdocs.snippetsOutputDir>
                             </systemPropertyVariables>
                         </configuration>
                     </plugin>

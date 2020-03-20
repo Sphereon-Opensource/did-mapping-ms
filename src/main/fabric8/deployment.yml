@@ -6,5 +6,16 @@ metadata:
 spec:
   template:
     spec:
+      volumes:
+        - name: config
+          configMap:
+            name: ${project.artifactId}
+            items:
+              - key: application.properties
+                path: application.properties
+      containers:
+        - volumeMounts:
+            - name: config
+              mountPath: /deployments/config
       imagePullSecrets:
-      - name: ${docker.registry.push.secret-name}
+        - name: ${docker.registry.push.secret-name}

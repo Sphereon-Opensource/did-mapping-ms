@@ -1,0 +1,4 @@
+data:
+  application.properties: |
+    spring.data.mongodb.database=did_mapping
+    spring.data.mongodb.host=mongo

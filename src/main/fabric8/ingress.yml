@@ -11,4 +11,4 @@ spec:
         paths:
           - backend:
               serviceName: ${project.artifactId}
-              servicePort: ms-http
+              servicePort: ms-port
