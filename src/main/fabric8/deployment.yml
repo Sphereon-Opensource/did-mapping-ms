@@ -1,0 +1,10 @@
+metadata:
+  labels:
+    app: ${project.artifactId}
+    project: ${project.artifactId}
+    version: ${project.version}
+spec:
+  template:
+    spec:
+      imagePullSecrets:
+      - name: ${docker.registry.push.secret-name}

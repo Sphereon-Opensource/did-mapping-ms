@@ -12,13 +12,39 @@
 
     <properties>
         <java.version>11</java.version>
-        <swagger2markup.version>1.3.1</swagger2markup.version>
         <asciidoc.input.directory>${project.basedir}/src/docs/asciidoc</asciidoc.input.directory>
         <swagger.output.dir>${project.basedir}/src/main/resources/swagger</swagger.output.dir>
         <asciidoc.snippet.directory>${project.build.directory}/asciidoc/snippets</asciidoc.snippet.directory>
         <asciidoc.generated.directory>${project.build.directory}/asciidoc/generated</asciidoc.generated.directory>
         <swagger.input>${swagger.output.dir}/swagger.sdk.json</swagger.input>
+
+
+        <!-- Docker chainSettings -->
+        <docker.registry.push>hostname</docker.registry.push> <!-- Create <server> section in .m2/chainSettings.xml with this
+                                                                     registry as id to authenticate to the private registry -->
+        <docker.registry.push.secret-name>registry-secret</docker.registry.push.secret-name>
+        <docker.registry.pull>docker.io</docker.registry.pull> <!-- Create <server> section in .m2/chainSettings.xml with this
+                                                                                registry as id to authenticate to the private registry -->
+        <fabric8.generator.from>adoptopenjdk:11.0.6_10-jre-hotspot</fabric8.generator.from>
+        <docker.repository>${project.artifactId}</docker.repository>
+        <http.port>8080</http.port>
+        <http.port.exposed>8061</http.port.exposed>
+
+
+        <!-- Fabric8 Kubernetes Metadata -->
+        <fabric8.namespace>dev</fabric8.namespace>
+        <fabric8.service.name>${project.artifactId}</fabric8.service.name>
+        <fabric8.domain>local</fabric8.domain>
+        <fabric8.label.provider>sphereon</fabric8.label.provider>
+        <fabric8.label.group>com.sphereon.did</fabric8.label.group>
+        <fabric8.label.container>java</fabric8.label.container>
+        <fabric8.service.type>ClusterIP</fabric8.service.type>
+        <fabric8.ingress-class>nginx</fabric8.ingress-class> <!-- or i.e. traefik, gce -->
+
+        <!-- artifact versions -->
+        <swagger2markup.version>1.3.1</swagger2markup.version>
         <springfox.version>2.9.2</springfox.version>
+        <fabric8.plugin.version>4.4.1</fabric8.plugin.version>
     </properties>
 
     <licenses>
@@ -128,6 +154,15 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>fabric8-maven-plugin</artifactId>
+                    <version>${fabric8.plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -154,6 +189,64 @@
                                 <include>WriteSwaggerJson.java</include>
                             </includes>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>f8-build</id>
+            <build>
+                <defaultGoal>clean package fabric8:build</defaultGoal>
+                <plugins>
+                    <plugin>
+                        <groupId>io.fabric8</groupId>
+                        <artifactId>fabric8-maven-plugin</artifactId>
+                        <configuration>
+                            <!--<pushRegistry>${docker.registry.push}</pushRegistry> enable when properly configured -->
+                            <pullRegistry>${docker.registry.pull}</pullRegistry>
+                            <verbose>true</verbose>
+                            <logStdout>true</logStdout>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>build-image</id>
+                                <goals>
+                                    <goal>resource</goal>
+                                    <goal>build</goal>
+                                    <goal>helm</goal>
+                                </goals>
+                                <configuration>
+                                    <images>
+                                        <image>
+                                            <name>${docker.repository}:${project.version}</name>
+                                            <build>
+                                                <from>${fabric8.generator.from}</from>
+                                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                                <assembly>
+                                                    <basedir>/deployments</basedir>
+                                                    <descriptorRef>artifact</descriptorRef>
+                                                </assembly>
+                                                <ports>
+                                                    <port>${http.port}</port>
+                                                </ports>
+                                            </build>
+                                            <run>
+                                                <namingStrategy>alias</namingStrategy>
+                                                <dependsOn>
+                                                    <container>mongo</container>
+                                                </dependsOn>
+                                                <links>
+                                                    <link>mongo</link>
+                                                </links>
+                                                <ports>
+                                                    <port>${http.port.exposed}:%{http.port}</port>
+                                                </ports>
+                                            </run>
+                                        </image>
+                                    </images>
+                                </configuration>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

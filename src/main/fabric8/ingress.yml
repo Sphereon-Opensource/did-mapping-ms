@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ${project.artifactId}.${fabric8.namespace}
+  annotations:
+    kubernetes.io/ingress.class: ${fabric8.ingress-class}
+spec:
+  rules:
+    - host: ${project.artifactId}.${fabric8.namespace}.${fabric8.domain}
+      http:
+        paths:
+          - backend:
+              serviceName: ${project.artifactId}
+              servicePort: ms-http
