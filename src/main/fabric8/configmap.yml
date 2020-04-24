@@ -1,4 +1,5 @@
 data:
   application.properties: |
-    spring.data.mongodb.database=did_mapping
-    spring.data.mongodb.host=mongo
+    spring.data.mongodb.host=${config.mongodb.hostname}
+    spring.data.mongodb.port=${config.mongodb.port}
+    spring.data.mongodb.database=${config.mongodb.database}

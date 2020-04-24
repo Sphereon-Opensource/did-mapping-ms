@@ -2,7 +2,6 @@ metadata:
   name: ${project.artifactId}
   annotations:
     api.service.kubernetes.io/path: /
-    service.beta.kubernetes.io/azure-load-balancer-internal: "${azure.expose-to-vnet}"
 spec:
   type: ${fabric8.service.type}
   ports:

@@ -30,6 +30,38 @@ A microservice for storing associations between user IDs and DIDs for applicatio
     ````
   
 ## Docker & Kubernetes support
+#####Environment settings
+Before Docker or Kubernetes profiles can be executed, you'll need some environment settings.
+The registry settings in the pom.xml can be overridden on the mvn command.
+````
+-Ddocker.registry.push=<hostname for container push registry>
+-Ddocker.registry.pull=<hostname for container pull registry> (The default is docker.io)
+````
+When using Kubernetes you can us an existing secret to access the container registry (This will be used in the deployment descriptor)  
+````
+-Ddocker.registry.push.secret-name=<secret name to access the conatiner registry>
+````
+When using Kubernetes, the mongo database settings can be overridden with:
+````
+-Dconfig.mongodb.hostname=mongo
+-Dconfig.mongodb.port=27017
+-Dconfig.mongodb.database=did_mapping
+````
+The server protocol, tcp ports and exposed ports can be overridden.
+The default is
+````
+-Dcontainer.enable-tomcat-ajp=false
+-Dtcp.port.internal=8080
+-Dtcp.port.exposed=8801
+````
+To switch to AJP mode
+````
+-Dcontainer.enable-tomcat-ajp=true
+-Dtcp.port.internal=8009
+-Dtcp.port.exposed=127.0.0.1:8096
+````
+   
+##### Build profiles
 * To build a docker image
     ````bash
   mvn -Pf8-build

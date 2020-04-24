@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sphereon.ms.did.mapping</groupId>
-    <artifactId>did-mapping</artifactId>
+    <artifactId>did-mapping-ms</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <name>Sphereon DID Mapping</name>
@@ -25,21 +25,18 @@
         <docker.registry.push.secret-name>registry-secret</docker.registry.push.secret-name>
         <docker.registry.pull>docker.io</docker.registry.pull> <!-- Create <server> section in .m2/chainSettings.xml with this registry as id to authenticate to the
                                                                       private registry, or do a docker login -u <user> manually -->
+        <config.mongodb.hostname>mongo</config.mongodb.hostname>
+        <config.mongodb.port>27017</config.mongodb.port>
+        <config.mongodb.database>did_mapping</config.mongodb.database>
 
         <fabric8.generator.from>fabric8/java-alpine-openjdk11-jre</fabric8.generator.from>
         <docker.repository>${fabric8.label.provider}/${project.artifactId}</docker.repository>
         <docker.version-tag>latest</docker.version-tag>
 
-        <!-- AJP mode -->
-        <container.enable-tomcat-ajp>true</container.enable-tomcat-ajp>
-        <tcp.port.internal>8009</tcp.port.internal>
-        <tcp.port.exposed>8901</tcp.port.exposed>
-
-        <!-- HTTP mode --> <!-- uncomment to use enable
+        <!-- HTTP mode -->
         <container.enable-tomcat-ajp>false</container.enable-tomcat-ajp>
         <tcp.port.internal>8080</tcp.port.internal>
         <tcp.port.exposed>8801</tcp.port.exposed>
-        -->
 
         <!-- Fabric8 Kubernetes Metadata -->
         <fabric8.namespace>dev</fabric8.namespace>
