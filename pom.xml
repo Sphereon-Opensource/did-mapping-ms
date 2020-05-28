@@ -331,13 +331,53 @@
             </build>
         </profile>
         <profile>
-            <id>asciidoc-test</id>
+            <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
                 <defaultGoal>clean compile test package</defaultGoal>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.4.0</version>
+                        <executions>
+                            <execution>
+                                <id>WriteSwaggerJson</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>mvn</executable>
+                            <environmentVariables>
+                                <JAVA_HOME>${java.home}</JAVA_HOME>
+                            </environmentVariables>
+                            <arguments>
+                                <argument>-Pwrite-swagger-json</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.0.0-M4</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <forkCount>1</forkCount>
+                            <reuseForks>false</reuseForks>
+                            <systemPropertyVariables>
+                                <io.springfox.staticdocs.outputDir>${swagger.output.dir}
+                                </io.springfox.staticdocs.outputDir>
+                                <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}
+                                </io.springfox.staticdocs.snippetsOutputDir>
+                            </systemPropertyVariables>
+                        </configuration>
+                    </plugin>
+
                     <!-- First, use the swagger2markup plugin to generate asciidoc -->
                     <plugin>
                         <groupId>io.github.swagger2markup</groupId>
@@ -388,22 +428,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M4</version>
-                        <inherited>false</inherited>
-                        <configuration>
-                            <forkCount>1</forkCount>
-                            <reuseForks>false</reuseForks>
-                            <systemPropertyVariables>
-                                <io.springfox.staticdocs.outputDir>${swagger.output.dir}
-                                </io.springfox.staticdocs.outputDir>
-                                <io.springfox.staticdocs.snippetsOutputDir>${asciidoc.snippet.directory}
-                                </io.springfox.staticdocs.snippetsOutputDir>
-                            </systemPropertyVariables>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
