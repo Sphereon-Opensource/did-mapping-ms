@@ -21,9 +21,68 @@ A microservice for storing associations between user IDs and DIDs for applicatio
       ````
 * Run tests, build jar, and run DID Mapping using:
     ````bash
-  mvn package
+  mvn
   java -jar target/did-mapping-1.0-SNAPSHOT.jar 
   ````
+* Regenerate swagger json after modifications to the REST API or models. (This is also done when the generate-test-resources phase, which is in the default lifecycle, is executed.)
+    ````bash
+  mvn -Pwrite-swagger-json
+    ````
+  
+## Docker & Kubernetes support
+#####Environment settings
+Before Docker or Kubernetes profiles can be executed, you'll need some environment settings.
+The registry settings in the pom.xml can be overridden on the mvn command.
+````
+-Ddocker.registry.push=<hostname for container push registry>
+-Ddocker.registry.pull=<hostname for container pull registry> (The default is docker.io)
+````
+When using Kubernetes you can us an existing secret to access the container registry (This will be used in the deployment descriptor)  
+````
+-Ddocker.registry.push.secret-name=<secret name to access the conatiner registry>
+````
+When using Kubernetes, the mongo database settings can be overridden with:
+````
+-Dconfig.mongodb.hostname=mongo
+-Dconfig.mongodb.port=27017
+-Dconfig.mongodb.database=did_mapping
+````
+The server protocol, tcp ports and exposed ports can be overridden.
+The default is
+````
+-Dcontainer.enable-tomcat-ajp=false
+-Dtcp.port.internal=8080
+-Dtcp.port.exposed=8801
+````
+To switch to AJP mode
+````
+-Dcontainer.enable-tomcat-ajp=true
+-Dtcp.port.internal=8009
+-Dtcp.port.exposed=127.0.0.1:8096
+````
+   
+##### Build profiles
+* To build a docker image
+    ````bash
+  mvn -Pf8-build
+    ````
+* To start a docker container
+    ````bash
+  mvn -Pdocker-start
+    ````
+* To push the image to a remote registry
+    ````bash
+  mvn -Pf8-push
+    ````
+* To apply the service to Kubernetes
+    ````bash
+  mvn -Pf8-apply
+    ````
+* Itś possible to combine
+    ````bash
+  mvn -Pf8-build -Pf8-push -Pf8-apply
+    ````
+
 ## Documentation
 By default, once the service is running, documentation and example API calls can be found at:
 * http://localhost:8080/swagger-ui.html#/did-map-controller

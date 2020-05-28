@@ -1,0 +1,13 @@
+metadata:
+  name: ${project.artifactId}
+  annotations:
+    api.service.kubernetes.io/path: /
+spec:
+  type: ${fabric8.service.type}
+  ports:
+  - port: ${tcp.port.exposed}
+    protocol: TCP
+    targetPort: ${tcp.port.internal}
+    name: ms-port
+  selector:
+    app: ${project.artifactId}
