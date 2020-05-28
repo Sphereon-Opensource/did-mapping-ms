@@ -24,7 +24,7 @@ A microservice for storing associations between user IDs and DIDs for applicatio
   mvn
   java -jar target/did-mapping-1.0-SNAPSHOT.jar 
   ````
-* Regenerate swagger json after modifications to the REST API or models
+* Regenerate swagger json after modifications to the REST API or models. (This is also done by default in the generate-test-resources phase.)
     ````bash
   mvn -Pwrite-swagger-json
     ````
